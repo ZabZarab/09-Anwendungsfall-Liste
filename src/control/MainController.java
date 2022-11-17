@@ -23,9 +23,30 @@ public class MainController {
      * @return String-Array mit den Familiennamen
      */
     public String[] showShelfContent(int index){
-        List<File> list = allShelves[index];
         //TODO 03: Ausgabe der Inhalte
-        return new String[]{"Platzhalter00", "Platzhalter01", "Platzhalter02"};
+        List<File> list = allShelves[index];
+
+        String[] output;
+        if(allShelves[index].isEmpty()){
+            output = new String[1];
+            output[0] = "Stapel ist leer.";
+        }else{
+            List<File> helpShelves = new List<>();
+            int size = 0;
+            while (!allShelves[index].isEmpty()){
+                size++;
+                helpShelves.append(allShelves[index].getContent());
+                allShelves[index].remove();
+            }
+
+            output = new String[size];
+            for(int i = 0; i< size ; i++){
+                output[size-1-i] = helpShelves.getName().getPhoneNumber();
+                allShelves[index].append(allShelves[index].getContent());
+                helpShelves.remove();
+            }
+        }
+        return output;
     }
 
     /**
@@ -58,6 +79,10 @@ public class MainController {
      */
     public boolean appendANewFile(int index, String name, String phoneNumber){
         //TODO 02: Hinzufügen einer neuen Akte am Ende der Liste.
+        if(!allShelves[index].isEmpty()){
+            allShelves[index].append(new File(name , phoneNumber));
+            return true;
+        }
         return false;
     }
 

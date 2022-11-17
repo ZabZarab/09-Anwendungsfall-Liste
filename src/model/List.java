@@ -184,8 +184,19 @@ public class List<ContentType> {
      */
     public void insert(ContentType pContent) {
         //TODO 01h: Inhaltsobjekt einfügen
-        if(hasAccess()){
-
+        if(pContent != null){
+            ListNode nn = new ListNode(pContent);
+            if(hasAccess()){
+                if(getPrevious(current) != null){
+                    getPrevious(current).setNextNode(nn);
+                }else{
+                    first = nn;
+                }
+                nn.setNextNode(current);
+            }else if(isEmpty()){
+                first = nn;
+                last = nn;
+            }
         }
     }
 
@@ -201,14 +212,16 @@ public class List<ContentType> {
      */
     public void append(ContentType pContent) {
         //TODO 01i: Inhaltsobjekt anhängen
-        ListNode n = new ListNode(pContent);
         if(pContent != null){
-            last.setNextNode(n);
-            if(isEmpty()){
-                first = n;
+            ListNode nn = new ListNode(pContent);
+            if(!isEmpty()){
+                last.setNextNode(nn);
+                last = nn;
+            }else{
+                first = nn;
+                last = nn;
             }
         }
-        last = n;
     }
 
     /**
@@ -223,6 +236,16 @@ public class List<ContentType> {
      */
     public void concat(List<ContentType> pList) {
         //TODO 01j: eine Liste an eine andere anhängen
+        if(pList != null && !pList.isEmpty() && pList.first != this.first){
+            if(this.isEmpty()){
+                this.first = pList.first;
+            }else{
+                last.setNextNode(pList.first);
+            }
+            this.last = pList.last;
+
+            pList.first = pList.current = pList.last = null;
+        }
     }
 
     /**
@@ -236,11 +259,18 @@ public class List<ContentType> {
      */
     public void remove() {
         if(hasAccess()) {
-            current.setContentObject(null);
-            current = current.getNextNode();
-        }
-        if(current == last){
-            current.setContentObject(null);
+            if(current != first){
+                getPrevious(current).setNextNode(current.getNextNode());
+            }else { if (current == last) {
+                    last = getPrevious(last);
+                } else {
+                    if (first == last) {
+                        last = null;
+                    }
+                    first = first.getNextNode();
+                }
+                current = current.getNextNode();
+            }
         }
         // Nichts tun, wenn es kein aktuelles Element gibt oder die Liste leer ist.
         //TODO 01k: eine Node samt Inhaltsobjekt entfernen
@@ -259,10 +289,12 @@ public class List<ContentType> {
      */
     private ListNode getPrevious(ListNode pNode) {
         //TODO 01l: Vorgänger-Node der aktuellen Node liefern.
-        boolean t = true;
-        if(hasAccess()){
-
-
+        if(pNode != null && first != pNode) {
+            ListNode output = first;
+            while(output != null){
+                if(output.getNextNode() == pNode) return null;
+                output = output.getNextNode();
+            }
         }
         return null;
     }

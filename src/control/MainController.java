@@ -15,6 +15,7 @@ public class MainController {
         allShelves[0] = new List<File>(); //Beachtet die unterschiedliche Instanziierung! Was bedeutet das?
         allShelves[1] = new List<>();
         createFiles();
+
     }
 
     /**
@@ -24,6 +25,7 @@ public class MainController {
      */
     public String[] showShelfContent(int index){
         //TODO 03: Ausgabe der Inhalte
+
         if(0<= index && index < allShelves.length){
             List<File> list = allShelves[index];
 
@@ -32,7 +34,9 @@ public class MainController {
             while (list.hasAccess()){
                    counter++;
                    list.next();
+                System.out.println("asdf");
             }
+
             if (counter > 0) {
                 String[] output = new String[counter];
                 list.toFirst();
@@ -53,22 +57,53 @@ public class MainController {
      */
     public boolean sort(int index){
         //TODO 07: Sortieren einer Liste.
-        List helpList = new List<File>();
+        /*List helpList = new List<File>();
         if(0 <= index && index < allShelves.length){
-            allShelves[index].toFirst();
-            File tmp = allShelves[index].getContent();
             while (!allShelves[index].isEmpty()){
+                allShelves[index].toFirst();
+                File tmp = allShelves[index].getContent();
+                allShelves[index].next();
+
                 while(allShelves[index].hasAccess()){
                     if(tmp.getName().compareTo(allShelves[index].getContent().getName()) > 0){
                         tmp = allShelves[index].getContent();
-                    }else {
-                        allShelves[index].next();
                     }
+                    allShelves[index].next();
                 }
-                helpList.append(tmp);
+                allShelves[index].toFirst();
+                while (allShelves[index].getContent() != tmp){
+                    allShelves[index].next();
+                }
                 allShelves[index].remove();
+                helpList.append(tmp);
             }
-            allShelves[index] = helpList;
+            allShelves[index].concat(helpList);
+            return true;
+        }
+        return false;*/
+
+        if(0 <= index && index < allShelves.length){
+            List<File> helpList = new List<>();
+            allShelves[index].toFirst();
+
+            File tmp = allShelves[index].getContent();
+            helpList.append(tmp);
+            allShelves[index].remove();
+
+            while (!allShelves[index].isEmpty()){
+                tmp = allShelves[index].getContent();
+
+                helpList.toFirst();
+                while (helpList.hasAccess() && tmp.getName().compareTo(helpList.getContent().getName()) > 0){
+                    helpList.next();
+                }
+                if(helpList.hasAccess()){
+                    helpList.insert(tmp);
+                }else{
+                    helpList.append(tmp);
+                }
+            }
+            allShelves[index].concat(helpList);
             return true;
         }
         return false;

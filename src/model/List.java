@@ -112,7 +112,7 @@ public class List<ContentType> {
      * den Wert false.
      */
     public void next() {
-        if(hasAccess() && current != last){
+        if(hasAccess()){
             current = current.getNextNode();
         }
         //TODO 01c: Wechsel auf die nächste Node
@@ -259,23 +259,24 @@ public class List<ContentType> {
      */
     public void remove() {
         if(hasAccess()) {
-            if(current != first){
-                getPrevious(current).setNextNode(current.getNextNode());
-            }else { if (current == last) {
+            if(current != first) {
+                if (current == last) {
                     last = getPrevious(last);
+                    last.setNextNode(null);
                 } else {
-                    if (first == last) {
-                        last = null;
-                    }
-                    first = first.getNextNode();
+                    getPrevious(current).setNextNode(current.getNextNode());
                 }
-                current = current.getNextNode();
+            }else{
+                if (first == last) {
+                    last = null;
+                }
+                first = first.getNextNode();
+            }
+            current = current.getNextNode();
             }
         }
         // Nichts tun, wenn es kein aktuelles Element gibt oder die Liste leer ist.
         //TODO 01k: eine Node samt Inhaltsobjekt entfernen
-    }
-
     /**
      * Liefert den Vorgaengerknoten des Knotens pNode. Ist die Liste leer, pNode
      * == null, pNode nicht in der Liste oder pNode der erste Knoten der Liste,
@@ -292,7 +293,7 @@ public class List<ContentType> {
         if(pNode != null && first != pNode) {
             ListNode output = first;
             while(output != null){
-                if(output.getNextNode() == pNode) return null;
+                if(output.getNextNode() == pNode) return output;
                 output = output.getNextNode();
             }
         }
